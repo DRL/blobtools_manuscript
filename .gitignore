@@ -1,0 +1,5 @@
+figures/ai*
+supplementary_material/2_simulated_libraries/1_prefilter/*_png/
+*.fasta
+.DS_Store
+*blobplots_png

@@ -1,0 +1,5 @@
+Rhabditida,#fca55d
+Primates,#e2514a
+Pseudomonadales,#47a0b3
+Enterobacterales,#edf8a3
+no-hit,#d3d3d3

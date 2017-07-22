@@ -1,0 +1,58 @@
+## blobtools v0.9.19
+## Total Reads = 59791109
+## Mapped Reads = 59695352
+## Unmapped Reads = 95757
+## Source(s) : /data/projects/thesis_dlaetsch/analyses/_blobtools/8_assembly/blobtools.dataset_both.vs.blobtools.assembly.all.named.bam
+# contig_id	read_cov	base_cov
+PAERU.contig_1	352760	99.591
+PAERU.contig_2	222826	100.036
+PAERU.contig_3	147379	100.263
+PAERU.contig_4	386206	99.869
+PAERU.contig_5	67512	99.802
+PAERU.contig_6	284663	99.998
+PAERU.contig_7	113391	100.361
+PAERU.contig_8	383953	100.41
+PAERU.contig_9	175504	100.083
+PAERU.contig_10	367697	100.356
+PAERU.contig_11	140203	99.656
+PAERU.contig_12	70545	99.589
+PAERU.contig_13	22755	98.753
+PAERU.contig_14	313092	100.217
+PAERU.contig_15	75361	100.168
+PAERU.contig_16	160480	100.308
+PAERU.contig_17	32934	100.638
+PAERU.contig_18	73342	99.83
+PAERU.contig_19	101556	99.35
+PAERU.contig_20	110424	100.005
+PAERU.contig_21	10333	110.591
+PAERU.contig_22	192644	99.636
+PAERU.contig_23	39323	99.226
+PAERU.contig_24	34378	100.731
+PAERU.contig_25	19813	102.465
+PAERU.contig_26	27675	100.718
+PAERU.contig_27	46305	99.865
+PAERU.contig_28	17123	101.488
+PAERU.contig_29	1204	175.222
+PAERU.contig_30	38151	100.699
+PAERU.contig_31	31799	99.773
+PAERU.contig_32	29128	109.579
+PAERU.contig_33	28292	100.441
+PAERU.contig_34	2449	105.234
+PAERU.contig_35	3920	101.883
+PAERU.contig_36	5751	590.291
+PAERU.contig_37	1591	100.201
+PAERU.contig_38	2818	128.377
+PAERU.contig_39	0	0.0
+PAERU.contig_40	3399	200.248
+PAERU.contig_41	10289	99.208
+PAERU.contig_42	7265	200.081
+PAERU.contig_43	706	193.425
+PAERU.contig_44	608	101.988
+PAERU.contig_45	1521	87.707
+PAERU.contig_46	799	105.56
+PAERU.contig_47	1609	190.468
+PAERU.contig_48	898	200.907
+PAERU.contig_49	1850	228.419
+PAERU.contig_50	1180	204.456
+PAERU.contig_51	0	0.0
+PAERU.contig_52	0	0.0

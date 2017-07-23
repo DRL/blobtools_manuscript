@@ -394,23 +394,31 @@ blobtools plot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.tax
 blobtools covplot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json --lib cov0 -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov --xlabel 'Library A' --ylabel 'Library B' --max 1e4 -x bestsumorder -r order
 ```
 
-# 6 Filter sequence IDs in assembly based on tabular view of BlobDB using awk (CHECK)
+# 6 Filter sequence IDs in assembly based on tabular view of BlobDB using awk
 
 ## 6.1 "Rhabditida" sequences
 
-```awk '$5>1 && $6>1' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > rhadbditida.contig_ids.txt```
+```
+awk '$5>1 && $6>1' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > rhadbditida.contig_ids.txt
+```
 
 ## 6.2 "Primates" sequences
 
-```awk '$5>0.1 && $6<0.5 && $8!="Bacteria" && $12 !="Nematoda"' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > primates.contig_ids.txt```
+```
+awk '$5>0.1 && $6<0.5 && $8!="Bacteria" && $12 !="Nematoda"' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > primates.contig_ids.txt
+```
 
 ## 6.3 "Enterobacterales" sequences
 
-```awk '$5>20 && $5<40 && $6<0.5 && $8!="Eukaryota"' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > enterobacterales.contig_ids.txt```
+```
+awk '$5>20 && $5<40 && $6<0.5 && $8!="Eukaryota"' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > enterobacterales.contig_ids.txt
+```
 
 ## 6.4 "Pseudomonadales" sequences
 
-```awk '$5<0.2 && $6>0.5' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > pseudomonadales.contig_ids.txt```
+```
+awk '$5<0.2 && $6>0.5' blobtools.A_B.blobDB.bestsumorder.table.txt | cut -f1 > pseudomonadales.contig_ids.txt
+```
 
 # 7 Filter reads based on lists of sequence IDs using 'BlobTools bamfilter'
 
@@ -418,23 +426,33 @@ blobtools covplot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.
 
 ### 7.1.1 "Rhabditida" reads in library A
 
-```blobtools bamfilter -b blobtools.dataset_A.vs.blobtools.assembly.A_B.bam -i rhadbditida.contig_ids.txt -o rhadbditida_A```
+```
+blobtools bamfilter -b blobtools.dataset_A.vs.blobtools.assembly.A_B.bam -i rhadbditida.contig_ids.txt -o rhadbditida_A
+```
 
 ### 7.1.2 "Rhabditida" reads in library B
 
-```blobtools bamfilter -b blobtools.dataset_B.vs.blobtools.assembly.A_B.bam -i rhadbditida.contig_ids.txt -o rhadbditida_B```
+```
+blobtools bamfilter -b blobtools.dataset_B.vs.blobtools.assembly.A_B.bam -i rhadbditida.contig_ids.txt -o rhadbditida_B
+```
 
 ## 7.2 "Primates" reads
 
-```blobtools bamfilter -b blobtools.dataset_A.vs.blobtools.assembly.A_B.bam -i primates.contig_ids.txt -o primates```
+```
+blobtools bamfilter -b blobtools.dataset_A.vs.blobtools.assembly.A_B.bam -i primates.contig_ids.txt -o primates
+```
 
 ## 7.3 "Enterobacterales" reads
 
-```blobtools bamfilter -b blobtools.dataset_B.vs.blobtools.assembly.A_B.bam -i enterobacterales.contig_ids.txt -o enterobacterales```
+```
+blobtools bamfilter -b blobtools.dataset_B.vs.blobtools.assembly.A_B.bam -i enterobacterales.contig_ids.txt -o enterobacterales
+```
 
 ## 7.4 "Pseudomondales" reads
 
-```blobtools bamfilter -b blobtools.dataset_B.vs.blobtools.assembly.A_B.bam -i pseudomonadales.contig_ids.txt -o pseudomonadales```
+```
+blobtools bamfilter -b blobtools.dataset_B.vs.blobtools.assembly.A_B.bam -i pseudomonadales.contig_ids.txt -o pseudomonadales
+```
 
 # 8. Assembly of filtered reads by taxonomic group
 
@@ -443,11 +461,15 @@ blobtools covplot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.
 
 ### 8.1.1 "Rhabditida" reads
 
-```clc_assembler -o blobtools.assembly.rhadbditida-BT.fasta -p fb ss 300 700 -q rhadbditida_A.blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.InIn.fq -p fb ss 300 700 -q rhadbditida_B.blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.InIn.fq```
+```
+clc_assembler -o blobtools.assembly.rhadbditida-BT.fasta -p fb ss 300 700 -q rhadbditida_A.blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.InIn.fq -p fb ss 300 700 -q rhadbditida_B.blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.InIn.fq
+```
 
 ### 8.1.2 "Primates" reads
 
-```clc_assembler -o blobtools.assembly.primates-BT.fasta -p fb ss 300 700 -q primates.blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.InIn.fq```
+```
+clc_assembler -o blobtools.assembly.primates-BT.fasta -p fb ss 300 700 -q primates.blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.InIn.fq
+```
 
 ### 8.1.3 "Enterobacterales" reads
 

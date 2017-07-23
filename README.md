@@ -82,13 +82,13 @@ perl -i -pe "s/^>/>HSAPI./g" assembly.HSAPI-SIM.fasta
 perl -i -pe "s/^>/>PAERU./g" assembly.PAERU-SIM.fasta
 ```
 
-> => ```supplementary_data/1_assembly_sim/assembly.CELEG-SIM.fasta```
+> ```supplementary_data/1_assembly_sim/assembly.CELEG-SIM.fasta```
 
-> => ```supplementary_data/1_assembly_sim/assembly.ECOLI-SIM.fasta```
+> ```supplementary_data/1_assembly_sim/assembly.ECOLI-SIM.fasta```
 
-> => ```supplementary_data/1_assembly_sim/assembly.HSAPI-SIM.fasta```
+> ```supplementary_data/1_assembly_sim/assembly.HSAPI-SIM.fasta```
 
-> => ```supplementary_data/1_assembly_sim/assembly.PAERU-SIM.fasta```
+> ```supplementary_data/1_assembly_sim/assembly.PAERU-SIM.fasta```
 
 ### 2.1.3 Concatenate into one file (for mapping purposes)
 
@@ -111,7 +111,7 @@ bwa mem assembly.sim.all.fasta blobtools.dataset_both.1.shuffled.fq blobtools.da
 samtools view -F 2304 blobtools.dataset_both.vs.assembly.sim.all.bam | cut -f1,3 | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | sed 's/HS19/HSAPI/g' | sed 's/HSMT/HSAPI/g' | sed 's/ENA|AE004091|AE004091/PAERU/g' | perl -lane 'if ($F[0] eq "*"){ print $F[0]."\t".(split /\./, $F[1])[0] }else{ print $F[0]."\t".(split /\./, $F[1])[0]}' | sort -Vk1 | uniq -c > blobtools.dataset_both.vs.assembly.sim.all.bam.read_count_by_reference.txt
 ```
 
-> => ```supplementary_data/1_assembly_sim/blobtools.dataset_both.vs.assembly.sim.all.bam.read_count_by_reference.txt```
+> ```supplementary_data/1_assembly_sim/blobtools.dataset_both.vs.assembly.sim.all.bam.read_count_by_reference.txt```
 
 ### 2.2.3 Infer true taxonomy based on read counts using the script generate_table_based_on_read_counts_by_sequence.py (CHECK)
 
@@ -119,7 +119,7 @@ samtools view -F 2304 blobtools.dataset_both.vs.assembly.sim.all.bam | cut -f1,3
 scripts/generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_both.vs.assembly.sim.all.bam.read_count_by_reference.txt > assembly.sim.all.table_based_on_read_counts.txt
 ```
 
-> => ```supplementary_data/1_assembly_sim/assembly.sim.all.table_based_on_read_counts.txt```
+> ```supplementary_data/1_assembly_sim/assembly.sim.all.table_based_on_read_counts.txt```
 
 --------------------------------------
 
@@ -131,7 +131,7 @@ scripts/generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_
 clc_assembler -o blobtools.assembly.A_B.fasta -p fb ss 300 700 -q -i blobtools.dataset_A.1.shuffled.fq blobtools.dataset_A.2.shuffled.fq -p fb ss 300 700 -q -i blobtools.dataset_B.1.shuffled.fq blobtools.dataset_B.2.shuffled.fq
 ```
 
-> => ```supplementary_data/2_simulated_libraries/blobtools.assembly.A_B.fasta```
+> ```supplementary_data/2_simulated_libraries/blobtools.assembly.A_B.fasta```
 
 ## 3.2 Mapping of read libraries
 
@@ -151,9 +151,9 @@ bwa mem blobtools.assembly.A_B.fasta blobtools.dataset_B.1.shuffled.fq blobtools
 parallel -j 2 'blobtools map2cov -i blobtools.assembly.A_B.fasta -b {}' ::: *.blobtools.assembly.A_B.bam
 ```
 
-> => ```supplementary_data/2_simulated_libraries/blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov```
+> ```supplementary_data/2_simulated_libraries/blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov```
 
-> => ```supplementary_data/2_simulated_libraries/blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov```
+> ```supplementary_data/2_simulated_libraries/blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov```
 
 --------------------------------------
 
@@ -179,16 +179,16 @@ samtools view -F 2304 blobtools.dataset_B.vs.blobtools.assembly.A_B.bam | cut -f
 cat *read_ids_by_contig_id.txt | sort -Vk1 | uniq -c > blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt
 ```
 
-> => ```supplementary_data/3_assessment_taxonomic_annotation/blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt```
+> ```supplementary_data/3_assessment_taxonomic_annotation/blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt```
 
 ## 4.2 Infer true taxonomy based on read counts using the script infer_true_taxonomy_based_on_read_mapping.py
 
 ```
 generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt > blobtools.assembly.A_B.true_taxonomy_by_contig.txt
 ```
-```
-> => supplementary_data/3_assessment_taxonomic_annotation/blobtools.assembly.A_B.true_taxonomy_by_contig.txt
-```
+
+> ```supplementary_data/3_assessment_taxonomic_annotation/blobtools.assembly.A_B.true_taxonomy_by_contig.txt```
+
 
 ## 4.3 Generating similarity search results
 - ```MTS1``` : ```[-]-max_target_seqs 1``` (Diamond blastx, blastn)
@@ -197,80 +197,108 @@ generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_A_B.vs.b
 - ```CUL10``` : ```-culling_limit 10``` (blastn)
 - ```no-mask``` : search is performed against database without removing any sequences
 - ```mask``` : search is performed against database removing sequences
- - ```supplementary_data/3_assessment_taxonomic_annotation/gis_to_exclude.txt``` : file containing NCBI GIs to exclude for BLASTn searches based on the following NCBI taxids: 9604 (Hominidae), 561 (Escherichia), 6239 (Caenorhabditis elegans), 286 (Pseudomonas), 28384 (other sequences). GIs were retrieved through NCBI nucleotide web interface. Final list is provided to relevant BLASTn searches using parameter
  - ```supplementary_data/3_assessment_taxonomic_annotation/taxids_to_exlude.txt``` : file containing NCBI subtree TaxIDs for the following NCBI taxids: 9604 (Hominidae), 561 (Escherichia), 6239 (Caenorhabditis elegans), 286 (Pseudomonas), 28384 (other sequences). Subtree TaxIDs were retrieved through NCBI taxonomy web interface. Sequences belonging to these NCBI subtree TaxIDs were removed to generate masked UniProt Reference Proteomes Diamond database (uniprot_ref_proteomes.masked.diamond-v0.9.5) as specified in [MISC-section]
 
 ### 4.3.1 BLASTn searches
 
 #### 4.3.1.1 ```no-mask```, ```CUL10```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.cul10.out -culling_limit 10```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.cul10.out -culling_limit 10
+```
 
 #### 4.3.1.2 ```no-mask```, ```MTS1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts1.out -max_target_seqs 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts1.out -max_target_seqs 1`
+``
 
 #### 4.3.1.3 ```no-mask```, ```MTS10```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts10.out -max_target_seqs 10```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts10.out -max_target_seqs 10`
+``
 
 #### 4.3.1.4 ```no-mask```, ```CUL10```, ```HSP1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.cul10.max_hsp_1.out -culling_limit 10 -max_hsps 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.cul10.max_hsp_1.out -culling_limit 10 -max_hsps 1
+```
 
 #### 4.3.1.5 ```no-mask```, ```MTS1```, ```HSP1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts1.max_hsp_1.out -max_target_seqs 1 -max_hsps 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts1.max_hsp_1.out -max_target_seqs 1 -max_hsps 1
+```
 
 #### 4.3.1.6 ```no-mask```, ```MTS10```, ```HSP1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts10.max_hsp_1.out -max_target_seqs 10 -max_hsps 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts10.max_hsp_1.out -max_target_seqs 10 -max_hsps 1
+```
 
 #### 4.3.1.7 ```mask```, ```CUL10```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.cul10.out -culling_limit 10 -negative_gilist gis_to_exclude.txt```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.cul10.out -culling_limit 10 -negative_gilist gis_to_exclude.txt
+```
 
 #### 4.3.1.8 ```mask```, ```MTS1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts1.out -max_target_seqs 1 -negative_gilist gis_to_exclude.txt```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts1.out -max_target_seqs 1 -negative_gilist gis_to_exclude.txt
+```
 
 #### 4.3.1.9 ```mask```, ```MTS10```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts10.out -max_target_seqs 10 -negative_gilist gis_to_exclude.txt```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts10.out -max_target_seqs 10 -negative_gilist gis_to_exclude.txt
+```
 
 #### 4.3.1.10 ```mask```, ```CUL10```, ```HSP1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.cul10.max_hsp_1.out -culling_limit 10 -negative_gilist gis_to_exclude.txt -max_hsps 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.cul10.max_hsp_1.out -culling_limit 10 -negative_gilist gis_to_exclude.txt -max_hsps 1
+```
 
 #### 4.3.1.11 ```mask```, ```MTS1```, ```HSP1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts1.max_hsp_1.out -max_target_seqs 1 -negative_gilist gis_to_exclude.txt -max_hsps 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts1.max_hsp_1.out -max_target_seqs 1 -negative_gilist gis_to_exclude.txt -max_hsps 1
+```
 
 #### 4.3.1.12 ```mask```, ```MTS10```, ```HSP1```
 
-```blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts10.max_hsp_1.out -max_target_seqs 10 -negative_gilist gis_to_exclude.txt -max_hsps 1```
+```
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.mask.mts10.max_hsp_1.out -max_target_seqs 10 -negative_gilist gis_to_exclude.txt -max_hsps 1
+```
 
 ### 4.3.2 Diamond blastx searches
 
 #### 4.3.2.1 ```no-mask```, ```MTS1```
 
-```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.no_mask.mts1.out --max-target-seqs 1```
+```
+diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.no_mask.mts1.out --max-target-seqs 1
+```
 
 #### 4.3.2.2 ```no-mask```, ```MTS10```
 
-```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.no_mask.mts10.out --max-target-seqs 10```
+```
+diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.no_mask.mts10.out --max-target-seqs 10
+```
 
 #### 4.3.2.3 ```no-mask```, ```MTS10```, ```HSP1```
 
-```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.no_mask.mts10.max_hsp_1.out --max-target-seqs 10 --max-hsps 1```
+```
+diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.no_mask.mts10.max_hsp_1.out --max-target-seqs 10 --max-hsps 1
+```
 
 #### 4.3.2.4 ```mask```, ```MTS1```
 
-```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts1.out --max-target-seqs 1```
+```
+diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts1.out --max-target-seqs 1
+```
 
-/exports/software/diamond/diamond-v0.9.5/diamond blastx --query /data/projects/thesis_dlaetsch/analyses/_blobtools/3_assembly/blobtools.assembly.A_B.fasta --db /exports/blast_db/uniprot/Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.fixed.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts1.fixed.out --max-target-seqs 1 --threads 24 --tmpdir /scratch/dlaetsch/
-/exports/software/diamond/diamond-v0.9.5/diamond blastx --query /data/projects/thesis_dlaetsch/analyses/_blobtools/3_assembly/blobtools.assembly.A_B.fasta --db /exports/blast_db/uniprot/Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.fixed.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.fixed.out --max-target-seqs 10 --threads 24 --tmpdir /scratch/dlaetsch/
-/exports/software/diamond/diamond-v0.9.5/diamond blastx --query /data/projects/thesis_dlaetsch/analyses/_blobtools/3_assembly/blobtools.assembly.A_B.fasta --db /exports/blast_db/uniprot/Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.fixed.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.max_hsp_1.fixed.out --max-target-seqs 10 --max-hsps 1 --threads 24 --tmpdir /scratch/dlaetsch/
 #### 4.3.2.5 ```mask```, ```MTS10```
 
 ```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.out --max-target-seqs 10```

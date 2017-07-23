@@ -394,7 +394,7 @@ blobtools plot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.tax
 blobtools covplot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json --lib cov0 -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov --xlabel 'Library A' --ylabel 'Library B' --max 1e4 -x bestsumorder -r order
 ```
 
-# 6 Filter sequence IDs in assembly based on tabular view of BlobDB using awk
+# 6 Filter sequence IDs in assembly based on tabular view of BlobDB
 
 ## 6.1 "Rhabditida" sequences
 

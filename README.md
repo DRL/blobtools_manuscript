@@ -210,14 +210,14 @@ blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 
 #### 4.3.1.2 ```no-mask```, ```MTS1```
 
 ```
-blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts1.out -max_target_seqs 1`
-``
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts1.out -max_target_seqs 1
+```
 
 #### 4.3.1.3 ```no-mask```, ```MTS10```
 
 ```
-blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts10.out -max_target_seqs 10`
-``
+blastn -query blobtools.assembly.A_B.fasta -db ncbi.2017-06-13/nt -evalue 1e-25 -outfmt '6 qseqid staxids bitscore std' -out A_B.vs.nt.no_mask.mts10.out -max_target_seqs 10
+```
 
 #### 4.3.1.4 ```no-mask```, ```CUL10```, ```HSP1```
 
@@ -301,26 +301,34 @@ diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Pr
 
 #### 4.3.2.5 ```mask```, ```MTS10```
 
-```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.out --max-target-seqs 10```
+```
+diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.out --max-target-seqs 10
+```
 
 #### 4.3.2.6 ```mask```, ```MTS10```, ```HSP1```
 
-```diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.max_hsp_1.out --max-target-seqs 10 --max-hsps 1```
+```
+diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Proteomes_2017_07/uniprot_ref_proteomes.masked.diamond-v0.9.5.dmnd --sensitive --evalue 1e-25 --outfmt 6 --out A_B.vs.refprot.mask.mts10.max_hsp_1.out --max-target-seqs 10 --max-hsps 1
+```
 
 ### 4.3.3 Add TaxIDs to Diamond blastx searches
 
 #### 4.3.3.1 BlobTools taxify
 
-```parallel -j1 'blobtools taxify -f {} -m Reference_Proteomes_2017_07/uniprot_ref_proteomes.taxids -s 0 -t 2' ::: A_B.vs.refprot*.out```
+```
+parallel -j1 'blobtools taxify -f {} -m Reference_Proteomes_2017_07/uniprot_ref_proteomes.taxids -s 0 -t 2' ::: A_B.vs.refprot*.out
+```
 
 #### 4.3.3.2 Remove un-taxified Diamond blastx searches
 
-```rm A_B.vs.refprot.no_mask.mts1.out```
-```rm A_B.vs.refprot.no_mask.mts10.out```
-```rm A_B.vs.refprot.no_mask.mts10.max_hsp_1.out```
-```rm A_B.vs.refprot.mask.mts1.out```
-```rm A_B.vs.refprot.mask.mts10.out```
-```rm A_B.vs.refprot.mask.mts10.max_hsp_1.out```
+```
+rm A_B.vs.refprot.no_mask.mts1.out
+rm A_B.vs.refprot.no_mask.mts10.out
+rm A_B.vs.refprot.no_mask.mts10.max_hsp_1.out
+rm A_B.vs.refprot.mask.mts1.out
+rm A_B.vs.refprot.mask.mts10.out
+rm A_B.vs.refprot.mask.mts10.max_hsp_1.out
+```
 
 > ```supplementary_data/3_assessment_taxonomic_annotation/search_results.tar.gz```
 
@@ -328,48 +336,63 @@ diamond blastx --query 3_assembly/blobtools.assembly.A_B.fasta --db Reference_Pr
 
 ### 4.4.1 Using a single similarity search results
 
-```parallel -j1 'blobtools create -i blobtools.assembly.A_B.fasta -c blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov -t {} -o {/.}' ::: *.out ```
+```
+parallel -j1 'blobtools create -i blobtools.assembly.A_B.fasta -c blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov -t {} -o {/.}' ::: *.out
+```
 
 ### 4.4.2 Using two similarity search results
 
 #### 4.4.2.1 ```no-mask```
 
-```parallel -j1 'blobtools create -i blobtools.assembly.A_B.fasta -c blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov -x bestsumorder -t {1} -t {2} -o {1/.}.AND.{2/.}  ::: A_B.vs.nt.no_mask.* ::: A_B.vs.refprot.no_mask.* ```
+```
+parallel -j1 'blobtools create -i blobtools.assembly.A_B.fasta -c blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov -x bestsumorder -t {1} -t {2} -o {1/.}.AND.{2/.}  ::: A_B.vs.nt.no_mask.* ::: A_B.vs.refprot.no_mask.*
+```
 
 #### 4.4.2.2 ```mask```
 
-```parallel -j1 'blobtools create -i blobtools.assembly.A_B.fasta -c blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov -x bestsumorder -t {1} -t {2} -o {1/.}.AND.{2/.}  ::: A_B.vs.nt.mask.* ::: A_B.vs.refprot.mask.* ```
+```
+parallel -j1 'blobtools create -i blobtools.assembly.A_B.fasta -c blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov -x bestsumorder -t {1} -t {2} -o {1/.}.AND.{2/.}  ::: A_B.vs.nt.mask.* ::: A_B.vs.refprot.mask.*
+```
 
 ## 4.5 Generate tabular views of BlobDBs using BlobTools ```view```
 
 ### 4.5.1 Generate tabular views of single similarity search result BlobDBs
-```parallel -j1 'blobtools view -i {} -r superkingdom -r phylum -r order --hits' ::: `ls | grep "json" | grep -v 'AND'```
+
+```
+parallel -j1 'blobtools view -i {} -r superkingdom -r phylum -r order --hits' ::: `ls | grep "json" | grep -v 'AND'
+```
 
 ### 4.5.2 Generate tabular views of two similarity search result BlobDBs, using taxrule 'bestsumorder'
-```parallel -j1 'blobtools view -i {} -x bestsumorder -r superkingdom -r phylum -r order --hits' ::: *AND*.json```
+
+```
+parallel -j1 'blobtools view -i {} -x bestsumorder -r superkingdom -r phylum -r order --hits' ::: *AND*.json
+```
 
 > ```supplementary_data/3_assessment_taxonomic_annotation/tabular_views.tar.gz```
 
 # 4.6 Evaluate results of taxonomic annotation of BlobTools
 - ```supplementary_data/3_assessment_taxonomic_annotation/order_of_tables.txt```: contains filenames of tabular views of BlobDBs paired with search parameters
 
-```generate_taxonomy_tables.py -t blobtools.assembly.A_B.true_taxonomy_by_contig.txt -d 3_assessment_taxonomic_annotation/ -b order_of_tables.txt --taxrank order```
+```
+generate_taxonomy_tables.py -t blobtools.assembly.A_B.true_taxonomy_by_contig.txt -d 3_assessment_taxonomic_annotation/ -b order_of_tables.txt --taxrank order
+```
 
 > ```supplementary_data/3_assessment_taxonomic_annotation/blobtools_table_analysis/```
 
 # 5 Visualising assembly of simulated read libraries using BlobTools
-- BlobDB used is : ```supplementary_data/2_simulated_libraries/1_prefilter/```
-
-```A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json```
+- BlobDB used is : ```supplementary_data/2_simulated_libraries/1_prefilter/A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json```
 
 ## 5.1 Generating Blobplots and Readcovplots using 'BlobTools plot'
 
-```blobtools plot -i A_B.vs.nt.no_mask.mts1.AND.A_B.vs.refprot.no_mask.mts1.taxified.blobDB.json -x bestsumorder -r order```
-```blobtools plot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json -x bestsumorder --legend --notitle -r order --format pdf -o blobplot_pdf/```
+```
+blobtools plot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json -x bestsumorder -r order --format png -o blobplot_png/```
+```
 
 ## 5.2 Generating a Covplot using 'BlobTools covplot'
 
-```blobtools covplot -i A_B.vs.nt.no_mask.mts1.AND.A_B.vs.refprot.no_mask.mts1.taxified.blobDB.json --lib cov0 -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov --xlabel 'Library A' --ylabel 'Library B' --max 1e4 -x bestsumorder -r order```
+```
+blobtools covplot -i A_B.vs.nt.mask.mts1.max_hsp_1.AND.A_B.vs.refprot.mask.mts1.taxified.blobDB.json --lib cov0 -c blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov --xlabel 'Library A' --ylabel 'Library B' --max 1e4 -x bestsumorder -r order
+```
 
 # 6 Filter sequence IDs in assembly based on tabular view of BlobDB using awk (CHECK)
 

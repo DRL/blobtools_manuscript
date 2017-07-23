@@ -1,4 +1,5 @@
 # Contents of folders
+
 - ```figures/```: figures
 -```tables/```: tables
 - ```supplementary_tables/```: supplementary tables
@@ -10,15 +11,15 @@
 # Analyses presented in the BlobTools manuscript
 
 # 0 Program versions
-- BlobTools: v1.0
-- ART: v2.5.8
-- bbmap shuffle.sh: v37.02
-- CLC: v5.0.0.142510-160525-215357
-- BWA: v0.7.15-r1140
-- BLAST: v2.6.0+
-- fastaqual_select.pl: v1.0 from (GitHub)[https://github.com/sujaikumar/assemblage/archive/v1.0.tar.gz]
-- Diamond: v0.9.5
-- BUSCO: v2.0.1
+- ```BlobTools```: v1.0
+- ```ART```: v2.5.8
+- ```bbmap shuffle.sh```: v37.02
+- ```CLC assembler```: v5.0.0.142510-160525-215357
+- ```BWA mem```: v0.7.15-r1140
+- ```BLASTn```: v2.6.0+
+- ```fastaqual_select.pl```: v1.0 from [GitHub](https://github.com/sujaikumar/assemblage/archive/v1.0.tar.gz)
+- ```Diamond```: v0.9.5
+- ```BUSCO```: v2.0.1
 
 --------------------------------------
 
@@ -82,8 +83,11 @@ perl -i -pe "s/^>/>PAERU./g" assembly.PAERU-SIM.fasta
 ```
 
 > => ```supplementary_data/1_assembly_sim/assembly.CELEG-SIM.fasta```
+
 > => ```supplementary_data/1_assembly_sim/assembly.ECOLI-SIM.fasta```
+
 > => ```supplementary_data/1_assembly_sim/assembly.HSAPI-SIM.fasta```
+
 > => ```supplementary_data/1_assembly_sim/assembly.PAERU-SIM.fasta```
 
 ### 2.1.3 Concatenate into one file (for mapping purposes)
@@ -123,7 +127,10 @@ scripts/generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_
 
 ## 3.1 CLC assembly of both simulated read libraries
 
-```clc_assembler -o blobtools.assembly.A_B.fasta -p fb ss 300 700 -q -i blobtools.dataset_A.1.shuffled.fq blobtools.dataset_A.2.shuffled.fq -p fb ss 300 700 -q -i blobtools.dataset_B.1.shuffled.fq blobtools.dataset_B.2.shuffled.fq```
+```
+clc_assembler -o blobtools.assembly.A_B.fasta -p fb ss 300 700 -q -i blobtools.dataset_A.1.shuffled.fq blobtools.dataset_A.2.shuffled.fq -p fb ss 300 700 -q -i blobtools.dataset_B.1.shuffled.fq blobtools.dataset_B.2.shuffled.fq
+```
+
 > => ```supplementary_data/2_simulated_libraries/blobtools.assembly.A_B.fasta```
 
 ## 3.2 Mapping of read libraries
@@ -140,9 +147,12 @@ bwa mem blobtools.assembly.A_B.fasta blobtools.dataset_B.1.shuffled.fq blobtools
 ### 3.2.2 Convert BAM to COV format using BlobTools ```map2cov```
 - generates files containing coverage information in COV format which are used in construction of BlobDBs
 
-```parallel -j 2 'blobtools map2cov -i blobtools.assembly.A_B.fasta -b {}' ::: *.blobtools.assembly.A_B.bam```
+```
+parallel -j 2 'blobtools map2cov -i blobtools.assembly.A_B.fasta -b {}' ::: *.blobtools.assembly.A_B.bam
+```
 
 > => ```supplementary_data/2_simulated_libraries/blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.cov```
+
 > => ```supplementary_data/2_simulated_libraries/blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.cov```
 
 --------------------------------------
@@ -156,22 +166,29 @@ bwa mem blobtools.assembly.A_B.fasta blobtools.dataset_B.1.shuffled.fq blobtools
 
 #### 4.1.1.1 Generate list of sequence IDs by taxon from which reads originated, for each read library
 
-```samtools view -F 2304 blobtools.dataset_A.vs.blobtools.assembly.A_B.bam | cut -f1,3 | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | sed 's/HS19/HSAPI/g' | sed 's/HSMT/HSAPI/g' | sed 's/ENA|AE004091|AE004091/PAERU/g' | perl -lane 'if ($F[0] eq "*"){ print $F[0]."\t".(split /\./, $F[1])[0] }else{ print $F[0]."\t".(split /\./, $F[1])[0]}'  > blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.read_ids_by_contig_id.txt```
-```samtools view -F 2304 blobtools.dataset_B.vs.blobtools.assembly.A_B.bam | cut -f1,3 | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | sed 's/HS19/HSAPI/g' | sed 's/HSMT/HSAPI/g' | sed 's/ENA|AE004091|AE004091/PAERU/g' | perl -lane 'if ($F[0] eq "*"){ print $F[0]."\t".(split /\./, $F[1])[0] }else{ print $F[0]."\t".(split /\./, $F[1])[0]}' > blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.read_ids_by_contig_id.txt```
+```
+samtools view -F 2304 blobtools.dataset_A.vs.blobtools.assembly.A_B.bam | cut -f1,3 | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | sed 's/HS19/HSAPI/g' | sed 's/HSMT/HSAPI/g' | sed 's/ENA|AE004091|AE004091/PAERU/g' | perl -lane 'if ($F[0] eq "*"){ print $F[0]."\t".(split /\./, $F[1])[0] }else{ print $F[0]."\t".(split /\./, $F[1])[0]}'  > blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.read_ids_by_contig_id.txt
+samtools view -F 2304 blobtools.dataset_B.vs.blobtools.assembly.A_B.bam | cut -f1,3 | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | sed 's/HS19/HSAPI/g' | sed 's/HSMT/HSAPI/g' | sed 's/ENA|AE004091|AE004091/PAERU/g' | perl -lane 'if ($F[0] eq "*"){ print $F[0]."\t".(split /\./, $F[1])[0] }else{ print $F[0]."\t".(split /\./, $F[1])[0]}' > blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.read_ids_by_contig_id.txt
+```
 
 #### 4.1.1.2 join both files from previous step and get read counts
 
 - generates file containing : counts, sequence_id ("*" for unmapped), and true origin of reads that mapped
 
-```cat *read_ids_by_contig_id.txt | sort -Vk1 | uniq -c > blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt```
+```
+cat *read_ids_by_contig_id.txt | sort -Vk1 | uniq -c > blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt
+```
 
 > => ```supplementary_data/3_assessment_taxonomic_annotation/blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt```
 
 ## 4.2 Infer true taxonomy based on read counts using the script infer_true_taxonomy_based_on_read_mapping.py
 
-```generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt > blobtools.assembly.A_B.true_taxonomy_by_contig.txt```
-
-> => ```supplementary_data/3_assessment_taxonomic_annotation/blobtools.assembly.A_B.true_taxonomy_by_contig.txt```
+```
+generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_A_B.vs.blobtools.assembly.A_B.bam.read_count_by_reference.txt > blobtools.assembly.A_B.true_taxonomy_by_contig.txt
+```
+```
+> => supplementary_data/3_assessment_taxonomic_annotation/blobtools.assembly.A_B.true_taxonomy_by_contig.txt
+```
 
 ## 4.3 Generating similarity search results
 - ```MTS1``` : ```[-]-max_target_seqs 1``` (Diamond blastx, blastn)

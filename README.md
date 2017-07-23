@@ -473,11 +473,15 @@ clc_assembler -o blobtools.assembly.primates-BT.fasta -p fb ss 300 700 -q primat
 
 ### 8.1.3 "Enterobacterales" reads
 
-```clc_assembler -o blobtools.assembly.enterobacterales-BT.fasta -p fb ss 300 700 -q enterobacterales.blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.InIn.fq```
+```
+clc_assembler -o blobtools.assembly.enterobacterales-BT.fasta -p fb ss 300 700 -q enterobacterales.blobtools.dataset_A.vs.blobtools.assembly.A_B.bam.InIn.fq
+```
 
 ### 8.1.4 "Pseudomonadales" reads
 
-```clc_assembler -o blobtools.assembly.pseudomonadales-BT.fasta -p fb ss 300 700 -q pseudomonadales.blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.InIn.fq```
+```
+clc_assembler -o blobtools.assembly.pseudomonadales-BT.fasta -p fb ss 300 700 -q pseudomonadales.blobtools.dataset_B.vs.blobtools.assembly.A_B.bam.InIn.fq
+```
 
 ## 8.2 Rename sequences in assemblies
 
@@ -495,22 +499,29 @@ perl -i -pe "s/^>/>pseudomonadales./g" blobtools.assembly.pseudomonadales-BT.fas
 
 ## 8.3 Concatenate into one file (for mapping purposes)
 
-```cat blobtools.assembly.*.fasta > blobtools.assembly.final.fasta```
+```
+cat blobtools.assembly.*.fasta > blobtools.assembly.final.fasta
+```
 
 # 9 Evaluation of 'cleaned' assemblies
 
 ## 9.1 Taxonomic evaluation based on mapping of original reads
 
 ### 9.1.1 BWA
+
 ```
 bwa index blobtools.assembly.all.fasta
 bwa mem blobtools.assembly.all.fasta blobtools.dataset_both.1.shuffled.fq blobtools.dataset_both.2.shuffled.fq | samtools view -b - > blobtools.dataset_both.vs.blobtools.assembly.all.bam
 ```
+
 ### 9.1.2 Generate read counts by taxon for each sequence
+
 ```
 samtools view -F 2304 blobtools.dataset_both.vs.blobtools.assembly.all.bam | cut -f1,3 | awk ' { t = $1; $1 = $2; $2 = t; print; } ' | sed 's/HS19/HSAPI/g' | sed 's/HSMT/HSAPI/g' | sed 's/ENA|AE004091|AE004091/PAERU/g' | perl -lane 'if ($F[0] eq "*"){ print $F[0]."\t".(split /\./, $F[1])[0] }else{ print $F[0]."\t".(split /\./, $F[1])[0]}' | sort -Vk1 | uniq -c > blobtools.dataset_both.vs.blobtools.assembly.all.bam.read_ids_by_contig_id.txt
 ```
+
 ### 9.1.3 Generate table of taxonomic annotation based on read counts
+
 ```
 generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_both.vs.blobtools.assembly.all.bam.read_ids_by_contig_id.txt  > blobtools.assembly.all.table_based_on_read_counts.txt
 ```
@@ -519,19 +530,20 @@ generate_table_based_on_read_counts_by_sequence.py -i blobtools.dataset_both.vs.
 
 ### 9.1.4 Generate hits files based on table of taxonomic annotation based on read counts
 
-```grep '^CELEG' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.rhadbditida.hits.txt```
-
-```grep '^HSAPI' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.primates.hits.txt```
-
-```grep '^ECOLI' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.enterobacterales.hits.txt```
-
-```grep '^PAERU' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.pseudomonadales.hits.txt```
+```
+grep '^CELEG' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.rhadbditida.hits.txt
+grep '^HSAPI' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.primates.hits.txt
+grep '^ECOLI' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.enterobacterales.hits.txt
+grep '^PAERU' blobtools.assembly.all.table_based_on_read_counts.txt | cut -f1,6 | perl -lane 'if($F[1] eq "CELEG"){print $F[0]."\t6239\t100"}elsif($F[1] eq "HSAPI"){print $F[0]."\t9606\t100"}elsif($F[1] eq "PAERU"){print $F[0]."\t287\t100"}elsif($F[1] eq "ECOLI"){print $F[0]."\t562\t100"}' > blobtools.assembly.pseudomonadales.hits.txt
+```
 
 ## 9.2 Generate individual blobplots for each 'cleaned' assembly using taxonomic annotation based on read counts
 
 ### 9.2.1 Convert BAM to COV format using 'BlobTools map2cov'
 
-```blobtools map2cov -i blobtools.assembly.all.fasta -b blobtools.dataset_both.vs.blobtools.assembly.all.bam```
+```
+blobtools map2cov -i blobtools.assembly.all.fasta -b blobtools.dataset_both.vs.blobtools.assembly.all.bam
+```
 
 ### 9.2.2 Subset COV file by taxonomic group
 
@@ -554,17 +566,13 @@ grep -Pv 'enterobacterales|primates|rhabditida' blobtools.dataset_both.vs.blobto
 
 ```
 blobtools create -i blobtools.assembly.rhadbditida-BT.fasta -c blobtools.dataset_both.vs.blobtools.assembly.all.bam.CELEG.cov -t blobtools.assembly.rhadbditida.hits.txt -o blobtools.assembly.rhadbditida
-```
-```
 blobtools create -i blobtools.assembly.primates-BT.fasta -c blobtools.dataset_both.vs.blobtools.assembly.all.bam.HSAPI.cov -t blobtools.assembly.primates.hits.txt -o blobtools.assembly.primates
-```
-```
 blobtools create -i blobtools.assembly.enterobacterales-BT.fasta -c blobtools.dataset_both.vs.blobtools.assembly.all.bam.ECOLI.cov -t blobtools.assembly.enterobacterales.hits.txt -o blobtools.assembly.enterobacterales
-```
-```
 blobtools create -i blobtools.assembly.pseudomonadales-BT.fasta -c blobtools.dataset_both.vs.blobtools.assembly.all.bam.PAERU.cov -t blobtools.assembly.pseudomonadales.hits.txt -o blobtools.assembly.pseudomonadales
 ```
+
 ## 9.4 Make BlobPlots for each BlobDB using defined colours
+
 ```
 blobtools plot -i blobtools.assembly.rhadbditida.blobDB.json -o blobplots_png/ -r order --colours blobtools_colours.txt ; \
 blobtools plot -i blobtools.assembly.primates.blobDB.json -o blobplots_png/ -r order --colours blobtools_colours.txt ; \
@@ -609,38 +617,56 @@ BUSCO.py -i assembly.HSAPI-SIM.fasta -o HSAPI_REF -m genome -l mammalia_odb9/
 
 ### X.1.1 Download UniProt Reference Proteomes
 
-```wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/Reference_Proteomes_2017_07.tar.gz```
+```
+wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/Reference_Proteomes_2017_07.tar.gz
+```
 
 ### X.1.2 Unpack protein FASTAs for each kingdom
 
-```parallel -j8 'gunzip {}' ::: `ls | grep "fasta.gz" | grep -v 'DNA' | grep -v 'additional'```
+```
+parallel -j8 'gunzip {}' ::: `ls | grep "fasta.gz" | grep -v 'DNA' | grep -v 'additional'
+```
 
 ### X.1.3 Concatenate all protein sequences into ```uniprot_ref_proteomes.fasta```
 
-```cat */*.fasta > uniprot_ref_proteomes.fasta```
+```
+cat */*.fasta > uniprot_ref_proteomes.fasta
+```
 
 ### X.1.4 Change sequence IDs
 
-```cat uniprot_ref_proteomes.fasta | sed -r 's/(^>sp\|)|(^>tr\|)/>/g' | cut -f1 -d"|" > temp; mv temp uniprot_ref_proteomes.fasta```
+```
+cat uniprot_ref_proteomes.fasta | sed -r 's/(^>sp\|)|(^>tr\|)/>/g' | cut -f1 -d"|" > temp; mv temp uniprot_ref_proteomes.fasta
+```
 
 ### X.1.5 make "no-mask" database
 
-```diamond makedb --in uniprot_ref_proteomes.fasta -d uniprot_ref_proteomes.diamond-v0.9.5```
+```
+diamond makedb --in uniprot_ref_proteomes.fasta -d uniprot_ref_proteomes.diamond-v0.9.5
+```
 
 ### X.1.6 "mask" database
 
 #### X.1.6.1 Subset mapping IDs to only contain TaxID entries
 
-```cat */.idmapping | grep "NCBI_TaxID" > uniprot_ref_proteomes.taxids```
+```
+cat */.idmapping | grep "NCBI_TaxID" > uniprot_ref_proteomes.taxids
+```
 
 #### X.1.6.2 Get sequence IDs to exclude
 
-```colgrep -f uniprot_ref_proteomes.taxids -i taxids_to_exlude.txt -c 3 | cut -f1 > sequence_ids_to_exclude.txt```
+```
+colgrep -f uniprot_ref_proteomes.taxids -i taxids_to_exlude.txt -c 3 | cut -f1 > sequence_ids_to_exclude.txt
+```
 
 #### X.1.6.3 Exclude sequences based on list to exclude
 
-```fastaqual_select.pl -f uniprot_ref_proteomes.fasta -e sequence_ids_to_exclude.txt > uniprot_ref_proteomes.masked.fasta```
+```
+fastaqual_select.pl -f uniprot_ref_proteomes.fasta -e sequence_ids_to_exclude.txt > uniprot_ref_proteomes.masked.fasta
+```
 
 #### X.1.6.4 make "mask" database
 
-```diamond makedb --in uniprot_ref_proteomes.masked.fasta -d uniprot_ref_proteomes.masked.diamond-v0.9.5```
+```
+diamond makedb --in uniprot_ref_proteomes.masked.fasta -d uniprot_ref_proteomes.masked.diamond-v0.9.5
+```

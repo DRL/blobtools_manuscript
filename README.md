@@ -615,7 +615,7 @@ BUSCO.py -i assembly.HSAPI-SIM.fasta -o HSAPI_REF -m genome -l mammalia_odb9/
 
 ## X.1 preparation of Diamond databases
 
-### X.1.1 Download UniProt Reference Proteomes
+### X.1.1 Download UniProt Reference Proteomes and mapping file
 
 ```
 wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/Reference_Proteomes_2017_07.tar.gz
@@ -650,7 +650,7 @@ diamond makedb --in uniprot_ref_proteomes.fasta -d uniprot_ref_proteomes.diamond
 #### X.1.6.1 Subset mapping IDs to only contain TaxID entries
 
 ```
-cat */.idmapping | grep "NCBI_TaxID" > uniprot_ref_proteomes.taxids
+cat */*.idmapping | grep "NCBI_TaxID" > uniprot_ref_proteomes.taxids
 ```
 
 #### X.1.6.2 Get sequence IDs to exclude
